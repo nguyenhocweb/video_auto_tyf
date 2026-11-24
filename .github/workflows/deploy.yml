@@ -1,0 +1,32 @@
+name: 🚀 Auto Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🌐 SSH into VPS and Update Docker Containers
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          script: |
+            echo "🚀 [CI/CD] Bắt đầu tự động cập nhật Server trên VPS..."
+            cd ~/video_auto_tyf || cd /root/video_auto_tyf
+            
+            echo "📥 [1/3] Đang kéo mã nguồn mới nhất từ GitHub..."
+            git pull origin main
+            
+            echo "🐳 [2/3] Đang build lại và cập nhật Docker containers..."
+            docker compose up -d --build
+            
+            echo "🔍 [3/3] Kiểm tra trạng thái các containers..."
+            docker compose ps
+            echo "✅ CẬP NHẬT THÀNH CÔNG!"

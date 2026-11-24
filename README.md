@@ -68,7 +68,30 @@ docker compose down
 
 ---
 
-## ⚡ 4. Hoặc Chạy trực tiếp bằng Python Virtualenv (Không dùng Docker)
+## ⚡ 4. Tự Động Cập Nhật Khi Đẩy Code Lên GitHub (CI/CD Auto-Deploy)
+
+Hệ thống hỗ trợ 2 cách để cứ mỗi khi bạn `git push` lên GitHub, VPS sẽ **tự động cập nhật code mới và khởi động lại container**:
+
+### Cách 1: Dùng GitHub Actions (Khuyên dùng - Chuẩn CI/CD)
+1. Vào repository trên GitHub: [nguyenhocweb/video_auto_tyf](https://github.com/nguyenhocweb/video_auto_tyf)
+2. Bấm vào **Settings** $\rightarrow$ chọn **Secrets and variables** $\rightarrow$ chọn **Actions**.
+3. Bấm nút **New repository secret** và thêm 3 biến sau:
+   * `VPS_HOST`: `103.20.102.228`
+   * `VPS_USERNAME`: `root`
+   * `VPS_PASSWORD`: `Y*Nt38d.2g9Ypr` (mật khẩu VPS của bạn)
+4. **Xong!** Từ giờ mỗi lần bạn gõ `git push origin main` trên máy tính, GitHub Actions sẽ tự động SSH vào VPS, kéo code mới và tự reload Docker container. Bạn có thể theo dõi tiến trình trực tiếp tại tab **Actions** trên GitHub.
+
+### Cách 2: Dùng Daemon Auto-Sync trên VPS (Không cần cài đặt GitHub Secrets)
+Trên VPS, bạn chỉ cần chạy lệnh sau để bật tiến trình quét tự động ngầm:
+```bash
+chmod +x auto_sync.sh
+nohup ./auto_sync.sh > auto_sync.log 2>&1 &
+```
+*Tiến trình này sẽ chạy ngầm kiểm tra GitHub mỗi 60 giây. Cứ thấy bạn vừa push code mới là nó tự động `git pull` và cập nhật Docker ngay lập tức!*
+
+---
+
+## ⚡ 5. Hoặc Chạy trực tiếp bằng Python Virtualenv (Không dùng Docker)
 
 Nếu VPS ít RAM và bạn không muốn dùng Docker:
 ```bash
