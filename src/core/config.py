@@ -89,6 +89,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3002",
         "http://localhost:8001",
         "http://127.0.0.1:8001",
+        "http://103.20.102.228",
+        "http://103.20.102.228:8001",
         "https://nguyen-video.vercel.app",
     ]
 

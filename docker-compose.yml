@@ -1,0 +1,46 @@
+# ==============================================================================
+#                  VIDEO AUTO TYF - DOCKER COMPOSE CONFIG
+# ==============================================================================
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: video_auto_backend
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8001
+    volumes:
+      - ./storage:/app/storage
+    expose:
+      - "8001"
+    networks:
+      - tyf_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  nginx:
+    image: nginx:alpine
+    container_name: video_auto_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - tyf_network
+
+networks:
+  tyf_network:
+    driver: bridge
