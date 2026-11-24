@@ -1,0 +1,39 @@
+enum CommonStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  DELETED
+  BLOCKED
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum VoiceGender {
+  MALE
+  FEMALE
+  NEUTRAL
+}
+
+enum GenerationType {
+  CLONE
+  DESIGN
+  SYNTHESIZE
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum TrainingJobStatus {
+  RECORDING
+  PREPROCESSING
+  TRAINING
+  COMPLETED
+  FAILED
+}

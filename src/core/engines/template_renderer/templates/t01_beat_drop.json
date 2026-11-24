@@ -1,0 +1,77 @@
+{
+  "template_id": "t01_beat_drop",
+  "name": "Mẫu 01: 1 Video + 1 Ảnh Pan Dọc & Chớp 15Hz (Chuẩn CapCut 7444199034253774133)",
+  "description": "Mô phỏng 100% khớp từng mili-giây mẫu CapCut ID 7444199034253774133: Video mở đầu 8.25s trượt dồn xuống mượt mà 0.55s, nối đuôi ảnh xuất hiện từ trên xuống đúng nhịp beat drop, trôi nhẹ 11.62 px/s.",
+  "category": "capcut_trending",
+  "version": "2.0.0",
+  "total_duration": 21.23,
+  "resolution": {
+    "width": 720,
+    "height": 1280,
+    "fps": 30
+  },
+  "slots": [
+    {
+      "slot_id": 1,
+      "slot_type": "video",
+      "title": "Slot 1: Video Mở Đầu (Intro Clip)",
+      "description": "Đoạn video clip intro đúng 8.53 giây (Handheld, phong cảnh hoặc nhân vật chuyển động nhẹ).",
+      "start_time": 0.0,
+      "duration": 8.53,
+      "required": true
+    },
+    {
+      "slot_id": 2,
+      "slot_type": "image",
+      "title": "Slot 2: Ảnh Hero Quét Dọc (Hero Shot)",
+      "description": "1 bức ảnh chân dung để hệ thống tự động quét dọc mượt mà (11.61 px/s) và nhấp nháy 15Hz trong 12.7s.",
+      "start_time": 8.53,
+      "duration": 12.7,
+      "required": true
+    },
+    {
+      "slot_id": 3,
+      "slot_type": "audio",
+      "title": "Slot 3: Nhạc Nền Gốc CapCut (Tùy chọn)",
+      "description": "Mặc định sử dụng bản nhạc gốc 21.23s trích xuất chuẩn xác từ mẫu CapCut 7444199034253774133.",
+      "start_time": 0.0,
+      "duration": 21.23,
+      "required": false
+    }
+  ],
+  "effects": [
+    {
+      "name": "smooth_slidedown_transition",
+      "trigger": "transition",
+      "start_time": 8.25,
+      "duration": 0.55,
+      "params": {
+        "transition": "slidedown",
+        "direction": "downward_push"
+      }
+    },
+    {
+      "name": "vertical_pan",
+      "trigger": "continuous",
+      "params": {
+        "pan_speed_px_per_sec": 11.61,
+        "total_pan_px": 148
+      }
+    },
+    {
+      "name": "film_strobe_15hz",
+      "trigger": "continuous",
+      "params": {
+        "frequency_hz": 15,
+        "amplitude": 0.025
+      }
+    }
+  ],
+  "export_settings": {
+    "encoder": "libx264",
+    "preset": "veryfast",
+    "cq": 20,
+    "max_vram_mb": 2048
+  },
+  "default_bgm": "real_capcut_audio.m4a"
+}

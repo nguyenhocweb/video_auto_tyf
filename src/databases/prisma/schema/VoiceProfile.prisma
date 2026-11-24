@@ -1,0 +1,25 @@
+model VoiceProfile {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId              String?         @map("user_id") @db.ObjectId
+  user                User?           @relation(fields: [userId], references: [id])
+  profileName         String          @map("profile_name")
+  description         String?
+  gender              VoiceGender     @default(NEUTRAL)
+  language            String          @default("vi")
+  tags                String[]
+  cloudinaryEmbedding CloudinaryAsset @map("cloudinary_embedding")
+  sourceSampleId      String?         @map("source_sample_id") @db.ObjectId
+  sourceSample        VoiceSample?    @relation(fields: [sourceSampleId], references: [id])
+  isPreset            Boolean         @default(false) @map("is_preset")
+  usageCount          Int             @default(0) @map("usage_count")
+  status              CommonStatus    @default(ACTIVE)
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+
+  audioGenerations    AudioGeneration[]
+
+  @@index([profileName])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([isPreset, createdAt(sort: Desc)])
+  @@map("voice_profiles")
+}

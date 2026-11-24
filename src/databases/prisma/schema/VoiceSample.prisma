@@ -1,0 +1,32 @@
+type CloudinaryAsset {
+  publicId     String @map("public_id")
+  secureUrl    String @map("secure_url")
+  resourceType String @default("video") @map("resource_type")
+  format       String
+  bytes        Int
+}
+
+model VoiceSample {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  originalFilename  String          @map("original_filename")
+  fileHash          String          @map("file_hash")
+  durationSeconds   Float           @map("duration_seconds")
+  sampleRate        Int             @default(24000) @map("sample_rate")
+  channels          Int             @default(1)
+  format            String          @default("wav")
+  sizeBytes         Int             @map("size_bytes")
+  cloudinary        CloudinaryAsset
+  whisperTranscript String?         @map("whisper_transcript")
+  waveformPeaks     Float[]         @map("waveform_peaks")
+  status            CommonStatus    @default(ACTIVE)
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  voiceProfiles     VoiceProfile[]
+  audioGenerations  AudioGeneration[]
+
+  @@index([fileHash])
+  @@index([createdAt(sort: Desc)])
+  @@map("voice_samples")
+}
+

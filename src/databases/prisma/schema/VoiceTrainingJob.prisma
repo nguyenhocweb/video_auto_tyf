@@ -1,0 +1,23 @@
+model VoiceTrainingJob {
+  id                        String             @id @default(auto()) @map("_id") @db.ObjectId
+  userId                    String?            @map("user_id") @db.ObjectId
+  user                      User?              @relation(fields: [userId], references: [id])
+  voice_name                String
+  gender                    VoiceGender        @default(NEUTRAL)
+  status                    TrainingJobStatus  @default(RECORDING)
+  total_samples             Int                @default(0)
+  total_duration_seconds    Float              @default(0.0)
+  target_epochs             Int                @default(20)
+  current_epoch             Int                @default(0)
+  current_loss              Float?
+  progress_percent          Int                @default(0)
+  estimated_remaining_sec   Int?
+  device_used               String?
+  cloudinary_model_url      String?
+  error_message             String?
+  created_at                DateTime           @default(now())
+  updated_at                DateTime           @updatedAt
+
+  @@index([userId, created_at(sort: Desc)])
+  @@map("voice_training_jobs")
+}

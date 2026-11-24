@@ -1,0 +1,96 @@
+{
+  "template_id": "t02_three_photos",
+  "name": "Mẫu 02: 3 Ảnh Giật Beat & Strobe Rhythmic (CapCut 7709090549353090312)",
+  "description": "Mô phỏng 100% khớp từng mili-giây mẫu CapCut 7709090549353090312: 3 ảnh tĩnh. Ảnh 1 mở đầu đơn sắc cổ điển (Monochrome) với cú nổ màu vocal (1.9s - 4.5s), chớp sáng trắng (White Flash) bùng nổ tại 18.60s beat drop, nối tiếp là vũ điệu giật beat luân phiên cực gắt giữa Ảnh 2 và Ảnh 3 cùng chuỗi strobe 1-frame 15Hz điện ảnh.",
+  "category": "capcut_trending",
+  "version": "1.0.0",
+  "total_duration": 31.23,
+  "resolution": {
+    "width": 720,
+    "height": 1280,
+    "fps": 30
+  },
+  "slots": [
+    {
+      "slot_id": 1,
+      "slot_type": "image",
+      "title": "Slot 1: Ảnh Mở Đầu (Intro Monochrome)",
+      "description": "Ảnh tĩnh chân dung mở đầu (0.0s - 18.60s): Đơn sắc nghệ thuật, tự động bung màu vocal lúc 1.9s và thu màu êm ái.",
+      "start_time": 0.0,
+      "duration": 18.60,
+      "required": true
+    },
+    {
+      "slot_id": 2,
+      "slot_type": "image",
+      "title": "Slot 2: Ảnh Tiết Tấu A (Beat Hit A)",
+      "description": "Ảnh tĩnh xuất hiện ngay cú nổ Beat Drop 18.60s, luân phiên giật beat và chớp strobe tốc độ cao.",
+      "start_time": 18.60,
+      "duration": 12.63,
+      "required": true
+    },
+    {
+      "slot_id": 3,
+      "slot_type": "image",
+      "title": "Slot 3: Ảnh Tiết Tấu B (Beat Hit B)",
+      "description": "Ảnh tĩnh phản hồi nhịp điệu (18.60s - 30.87s), phối hợp với Ảnh 2 tạo hiệu ứng giật beat nảy hình CapCut.",
+      "start_time": 18.60,
+      "duration": 12.63,
+      "required": true
+    },
+    {
+      "slot_id": 4,
+      "slot_type": "audio",
+      "title": "Slot 4: Nhạc Nền Beat Drop (Tùy chọn)",
+      "description": "Mặc định sử dụng bản nhạc gốc 31.23s trích xuất chuẩn xác từ mẫu CapCut 7709090549353090312.",
+      "start_time": 0.0,
+      "duration": 31.23,
+      "required": false
+    }
+  ],
+  "effects": [
+    {
+      "name": "intro_vocal_color_burst",
+      "trigger": "time_window",
+      "start_time": 1.90,
+      "duration": 2.60,
+      "params": {
+        "start_sat": 0.0,
+        "peak_sat": 1.15,
+        "end_sat": 0.0
+      }
+    },
+    {
+      "name": "white_flash_beat_drop",
+      "trigger": "transition",
+      "start_time": 18.60,
+      "duration": 0.25,
+      "params": {
+        "peak_brightness": 0.85,
+        "decay_curve": "linear"
+      }
+    },
+    {
+      "name": "fast_strobe_rhythmic_switch",
+      "trigger": "beat_sync",
+      "params": {
+        "switch_count": 54,
+        "strobe_frame_duration": 1
+      }
+    },
+    {
+      "name": "rounded_corner_vignette",
+      "trigger": "continuous",
+      "params": {
+        "radius_px": 42
+      }
+    }
+  ],
+  "export_settings": {
+    "encoder": "libx264",
+    "preset": "veryfast",
+    "cq": 20,
+    "max_vram_mb": 2048
+  },
+  "default_bgm": "real_tpl02_audio.m4a"
+}

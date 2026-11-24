@@ -1,0 +1,22 @@
+// File: be/src/databases/prisma/schema/Notification.prisma
+// Bảng lưu trữ Thông Báo Đa Vai Trò trong CSDL MongoDB
+
+model Notification {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String?  @map("user_id") @db.ObjectId
+  targetRole String   @default("CREATOR") @map("target_role") // "ALL", "ADMIN", "CREATOR"
+  type       String   // "AUTO_CRAWL_STARTED", "AUTO_VIDEO_DISCOVERED", "AUTO_PUBLISH_SUCCESS", "AUTO_ERROR_ALERT", "JOB_TRANSLATION_FAILED", "JOB_COMPLETED"
+  title      String
+  message    String
+  level      String   @default("INFO") // "INFO", "SUCCESS", "WARNING", "ERROR"
+  metadata   Json?    @map("metadata") // Chứa link kênh, link video, link FB/YT, retry info
+  isRead     Boolean  @default(false) @map("is_read")
+  readAt     DateTime? @map("read_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([userId, isRead, createdAt(sort: Desc)])
+  @@index([targetRole, createdAt(sort: Desc)])
+  @@index([type, createdAt(sort: Desc)])
+  @@map("notifications")
+}
+

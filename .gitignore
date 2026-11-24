@@ -1,0 +1,54 @@
+# ==============================================================================
+#                  VIDEO AUTO TYF - SERVER GITIGNORE
+# ==============================================================================
+
+# 1. Environment & Secrets (TUYỆT ĐỐI KHÔNG COMMIT FILE .ENV CHỨA API KEYS)
+.env
+*.env
+.env.*
+!.env.example
+
+# 2. Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# 3. Storage & Media Cache (Không commit video/audio tạm)
+storage/temp/*
+!storage/temp/.gitkeep
+storage/audio_output/*
+!storage/audio_output/.gitkeep
+storage/dubbing_output/*
+!storage/dubbing_output/.gitkeep
+storage/hf_cache/
+storage/torch_cache/
+storage/modelscope_cache/
+*.mp4
+*.mp3
+*.wav
+*.m4a
+*.mov
+*.webm
+*.mkv
+*.flac
+*.aac
+
+# 4. OS & IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini

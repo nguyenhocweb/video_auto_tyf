@@ -1,0 +1,35 @@
+type CloudinaryAudio {
+  publicId        String  @map("public_id")
+  secureUrl       String  @map("secure_url")
+  mp3StreamUrl    String? @map("mp3_stream_url")
+  durationSeconds Float   @map("duration_seconds")
+  sampleRate      Int     @default(24000) @map("sample_rate")
+  format          String  @default("wav")
+  bytes           Int
+}
+
+model AudioGeneration {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String?          @map("user_id") @db.ObjectId
+  user               User?            @relation(fields: [userId], references: [id])
+  generationType     GenerationType   @default(CLONE) @map("generation_type")
+  voiceProfileId     String?          @map("voice_profile_id") @db.ObjectId
+  voiceProfile       VoiceProfile?    @relation(fields: [voiceProfileId], references: [id])
+  sourceSampleId     String?          @map("source_sample_id") @db.ObjectId
+  sourceSample       VoiceSample?     @relation(fields: [sourceSampleId], references: [id])
+  inputText          String           @map("input_text")
+  instructPrompt     String?          @map("instruct_prompt")
+  speed              Float            @default(1.0)
+  numStep            Int              @default(28) @map("num_step")
+  guidanceScale      Float            @default(2.0) @map("guidance_scale")
+  status             GenerationStatus @default(PENDING)
+  cloudinaryAudio    CloudinaryAudio? @map("cloudinary_audio")
+  processTimeSeconds Float?           @map("process_time_seconds")
+  errorMessage       String?          @map("error_message")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([status, createdAt])
+  @@map("audio_generations")
+}

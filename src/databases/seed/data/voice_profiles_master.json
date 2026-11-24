@@ -1,0 +1,54 @@
+[
+  {
+    "profileName": "Giọng Review Công Nghệ Nam - Trầm Ấm",
+    "description": "Giọng nam miền Bắc độ tuổi 25-30, phát âm chuẩn, nhịp điệu nhanh và dứt khoát, chuyên review đồ công nghệ TikTok Shorts.",
+    "gender": "MALE",
+    "language": "vi",
+    "tags": ["review", "cong-nghe", "mien-bac", "nam-tre", "tram-am"],
+    "cloudinaryEmbedding": {
+      "publicId": "video_ai/voice_profiles/embedding_preset_tech_male",
+      "secureUrl": "https://res.cloudinary.com/video-ai-cloud/raw/upload/v1793576500/video_ai/voice_profiles/embedding_preset_tech_male.pt",
+      "resourceType": "raw",
+      "format": "pt",
+      "bytes": 10485760
+    },
+    "isPreset": true,
+    "usageCount": 150,
+    "status": "ACTIVE"
+  },
+  {
+    "profileName": "Giọng Kể Chuyện Nữ - Thì Thầm & Truyền Cảm",
+    "description": "Giọng nữ nhẹ nhàng, ấm áp, nhịp điệu chậm rãi, phù hợp đọc truyện đêm khuya hoặc podcast chữa lành.",
+    "gender": "FEMALE",
+    "language": "vi",
+    "tags": ["ke-chuyen", "truyen-dem", "nhe-nhang", "nu-tre", "chua-lanh"],
+    "cloudinaryEmbedding": {
+      "publicId": "video_ai/voice_profiles/embedding_preset_story_female",
+      "secureUrl": "https://res.cloudinary.com/video-ai-cloud/raw/upload/v1793576500/video_ai/voice_profiles/embedding_preset_story_female.pt",
+      "resourceType": "raw",
+      "format": "pt",
+      "bytes": 10485760
+    },
+    "isPreset": true,
+    "usageCount": 98,
+    "status": "ACTIVE"
+  },
+  {
+    "profileName": "Giọng MC Tin Tức Nam - Chuyên Nghiệp & Đĩnh Đạc",
+    "description": "Giọng nam phát thanh viên đài truyền hình, chuẩn giọng Hà Nội, uy tín, đĩnh đạc, phù hợp bản tin thời sự & tài chính.",
+    "gender": "MALE",
+    "language": "vi",
+    "tags": ["mc", "tin-tuc", "chuyen-nghiep", "thoi-su", "ha-noi"],
+    "cloudinaryEmbedding": {
+      "publicId": "video_ai/voice_profiles/embedding_preset_news_male",
+      "secureUrl": "https://res.cloudinary.com/video-ai-cloud/raw/upload/v1793576500/video_ai/voice_profiles/embedding_preset_news_male.pt",
+      "resourceType": "raw",
+      "format": "pt",
+      "bytes": 10485760
+    },
+    "isPreset": true,
+    "usageCount": 75,
+    "status": "ACTIVE"
+  }
+]
+
