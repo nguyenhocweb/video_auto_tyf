@@ -6,26 +6,41 @@ import hashlib
 import datetime
 from pathlib import Path
 from typing import Any, Optional, Dict, List
-import soundfile as sf  # type: ignore
-import torch
+try:
+    import soundfile as sf  # type: ignore
+except ImportError:
+    sf = None  # type: ignore
+
+try:
+    import torch  # type: ignore
+except ImportError:
+    torch = None  # type: ignore
 
 from src.core.config import settings
 from src.modules.shared.voice.schemas import (
     VoiceCloneRequest, VoiceDesignRequest, VoiceProfileCreateRequest,
     VoiceProfileResponse, VoiceSynthesizeFromProfileRequest, AudioGenerationResponse,
 )
-from src.modules.shared.voice.profile_synthesizer import synthesize_script_from_profile
-from src.modules.shared.voice.reference_transcriber import transcribe_reference_audio
+try:
+    from src.modules.shared.voice.profile_synthesizer import synthesize_script_from_profile
+    from src.modules.shared.voice.reference_transcriber import transcribe_reference_audio
+except ImportError:
+    synthesize_script_from_profile = None  # type: ignore
+    transcribe_reference_audio = None  # type: ignore
 
 # Đảm bảo đường dẫn app/core/engines có trong sys.path khi chạy runtime
 if settings.ENGINES_DIR.exists() and str(settings.ENGINES_DIR) not in sys.path:
     sys.path.insert(0, str(settings.ENGINES_DIR))
 
-# Import OmniVoice engine từ app/core/engines/omnivoice
+# Import OmniVoice engine từ app/core/engines/omnivoice (tùy chọn trên VPS Core)
 try:
     from omnivoice import OmniVoice, OmniVoiceGenerationConfig  # type: ignore
 except ImportError:
-    from src.core.engines.omnivoice import OmniVoice, OmniVoiceGenerationConfig  # type: ignore
+    try:
+        from src.core.engines.omnivoice import OmniVoice, OmniVoiceGenerationConfig  # type: ignore
+    except ImportError:
+        OmniVoice = None  # type: ignore
+        OmniVoiceGenerationConfig = None  # type: ignore
 
 
 class OmniVoiceService:

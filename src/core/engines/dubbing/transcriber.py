@@ -6,8 +6,12 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional, Callable
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
-import torch
-from faster_whisper import WhisperModel
+try:
+    import torch  # type: ignore
+    from faster_whisper import WhisperModel  # type: ignore
+except ImportError:
+    torch = None  # type: ignore
+    WhisperModel = None  # type: ignore
 from src.core.config import settings
 from src.core.engines.dubbing.hallucination_filter import (
     is_hallucinated_segment,
