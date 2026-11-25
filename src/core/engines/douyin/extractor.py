@@ -287,7 +287,7 @@ class DouyinExtractor:
 
         if sys.platform == "win32":
             def _runner():
-                loop = asyncio.ProactorEventLoop()
+                loop = asyncio.ProactorEventLoop() if hasattr(asyncio, "ProactorEventLoop") else asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
                 try:
                     return loop.run_until_complete(cls._extract_with_playwright(item_id, title_hint))

@@ -29,7 +29,7 @@ class AutomationExecutor:
     @staticmethod
     def _run_crawler_in_proactor(channel_url: str, limit: int = 15) -> List[Dict[str, Any]]:
         """Chạy crawler Douyin trong ProactorEventLoop riêng biệt trên Windows."""
-        loop = asyncio.ProactorEventLoop()
+        loop = asyncio.ProactorEventLoop() if hasattr(asyncio, "ProactorEventLoop") else asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         try:
             crawler = DouyinChannelCrawler()

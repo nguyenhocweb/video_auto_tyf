@@ -23,7 +23,7 @@ logger = logging.getLogger("video_download_service")
 
 def _run_crawler_in_proactor(channel_url: str, limit: int) -> Dict[str, Any]:
     """Chạy DouyinChannelCrawler trong ProactorEventLoop riêng biệt để tương thích 100% Windows Uvicorn."""
-    loop = asyncio.ProactorEventLoop()
+    loop = asyncio.ProactorEventLoop() if hasattr(asyncio, "ProactorEventLoop") else asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
         return loop.run_until_complete(DouyinChannelCrawler.crawl_today_videos(channel_url, limit=limit))
