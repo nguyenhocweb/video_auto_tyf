@@ -19,6 +19,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
           script: |
+            set -e
             echo "🚀 [CI/CD] Bắt đầu tự động cập nhật Server trên VPS..."
             cd ~/video_auto_tyf || cd /root/video_auto_tyf
             
