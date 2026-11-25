@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from src.core.config import settings
+from src.modules.creator.video.router import video_router
 from src.modules.creator.inspector.router import inspector_router
 from src.modules.creator.facebook.router import facebook_router
 from src.modules.creator.youtube.router import router as youtube_router
@@ -57,6 +58,7 @@ async def shutdown_event():
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(notifications_router, prefix="/api/v1")
 app.include_router(ws_router, prefix="/api/v1")
+app.include_router(video_router, prefix="/api/v1/creator")
 app.include_router(inspector_router, prefix="/api/v1/creator")
 app.include_router(facebook_router, prefix="/api/v1/creator")
 app.include_router(youtube_router, prefix="/api/v1/creator")
