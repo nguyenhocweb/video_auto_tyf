@@ -16,6 +16,7 @@ from src.modules.creator.tiktok.router import tiktok_router
 from src.modules.creator.douyin.router import router as douyin_router
 from src.modules.creator.automation.router import automation_router
 from src.modules.creator.bgm.router import bgm_router
+from src.modules.creator.stitch.router import router as stitch_router
 from src.modules.shared.auth.router import auth_router
 from src.modules.shared.notifications.router import notifications_router
 from src.modules.admin.dashboard.router import admin_dashboard_router
@@ -66,6 +67,7 @@ app.include_router(tiktok_router, prefix="/api/v1/creator")
 app.include_router(douyin_router, prefix="/api/v1/creator")
 app.include_router(automation_router, prefix="/api/v1/creator")
 app.include_router(bgm_router, prefix="/api/v1/creator")
+app.include_router(stitch_router, prefix="/api/v1")
 app.include_router(admin_dashboard_router, prefix="/api/v1/admin")
 app.include_router(admin_users_router, prefix="/api/v1/admin")
 app.include_router(admin_voices_router, prefix="/api/v1/admin")
