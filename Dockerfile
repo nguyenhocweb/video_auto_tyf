@@ -1,7 +1,7 @@
 # ==============================================================================
 #                  VIDEO AUTO TYF - DOCKERFILE
 # ==============================================================================
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # Ngăn Python tạo các file .pyc và bật stdout unbuffered
 ENV PYTHONDONTWRITEBYTECODE=1
