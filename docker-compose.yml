@@ -39,6 +39,21 @@ services:
     networks:
       - tyf_network
 
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: video_auto_ngrok
+    restart: always
+    env_file:
+      - .env
+    command:
+      - "http"
+      - "--domain=${NGROK_DOMAIN:-desktop-barley-pushup.ngrok-free.dev}"
+      - "nginx:80"
+    depends_on:
+      - nginx
+    networks:
+      - tyf_network
+
 networks:
   tyf_network:
     driver: bridge
