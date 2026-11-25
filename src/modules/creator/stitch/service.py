@@ -11,6 +11,7 @@ from src.core.engines.douyin.extractor import DouyinExtractor
 from src.modules.creator.automation.hook_pool_repo import HookPoolMongoRepository
 from src.modules.creator.automation.executor_helpers import ExecutorHelpers
 from src.modules.creator.bgm.service import BgmService
+from src.modules.shared.cloudinary.service import FastCloudinaryService
 from src.modules.creator.stitch.schemas import (
     ManualStitchRequest,
     ManualStitchResponse,
@@ -108,10 +109,27 @@ class StitchService:
 
             final_dur = VideoStitcher.get_media_duration(out_stitched_path)
             preview_url = f"/api/v1/creator/stitch/stream/{out_filename}"
+            final_video_path = out_stitched_path
+
+            # Bắt buộc upload video thành phẩm lên Cloudinary để lưu trữ CDN & giải phóng ổ cứng VPS
+            cloud_res = await FastCloudinaryService.upload_large_file(
+                file_path=out_stitched_path,
+                filename=out_filename,
+                folder="video_ai/stitched_videos",
+                resource_type="video",
+            )
+            if cloud_res and cloud_res.get("secure_url"):
+                preview_url = cloud_res["secure_url"]
+                final_video_path = cloud_res["secure_url"]
+                if os.path.exists(out_stitched_path):
+                    try:
+                        os.remove(out_stitched_path)
+                    except Exception:
+                        pass
 
             return ManualStitchResponse(
                 success=True,
-                video_path=out_stitched_path,
+                video_path=final_video_path,
                 filename=out_filename,
                 preview_url=preview_url,
                 duration=round(final_dur, 2),
