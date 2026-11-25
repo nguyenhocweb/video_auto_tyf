@@ -91,6 +91,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:8001",
         "http://103.20.102.228",
         "http://103.20.102.228:8001",
+        "https://desktop-barley-pushup.ngrok-free.dev",
+        "https://giant-drudge-pastime.ngrok-free.dev",
         "https://nguyen-video.vercel.app",
     ]
 
