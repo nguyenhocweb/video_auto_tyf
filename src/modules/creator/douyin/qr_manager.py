@@ -106,7 +106,12 @@ class DouyinQrManager:
                         is_need, mob = True, dom_mob
 
                 if is_need and sess["status"] != "NEED_VERIFY":
-                    sess.update({"status": "NEED_VERIFY", "masked_mobile": mob, "message": "Yêu cầu mã xác minh OTP SMS."})
+                    sess.update({
+                        "status": "NEED_VERIFY",
+                        "masked_mobile": mob,
+                        "message": "Yêu cầu mã xác minh OTP SMS.",
+                        "expires_at": time.time() + 180,
+                    })
                     try:
                         import os
                         from src.modules.creator.douyin.browser_controller import get_scratch_dir

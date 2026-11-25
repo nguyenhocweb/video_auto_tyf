@@ -43,5 +43,5 @@ COPY storage ./storage
 # Mở cổng 8001
 EXPOSE 8001
 
-# Lệnh khởi chạy server FastAPI với 2 workers tối ưu cho VPS
-CMD ["python", "-m", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "2"]
+# Lệnh khởi chạy server FastAPI (1 async worker để đồng bộ AutomationScheduler, WebSocket & QR Sessions)
+CMD ["python", "-m", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8001"]
