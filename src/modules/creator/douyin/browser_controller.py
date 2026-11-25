@@ -23,10 +23,23 @@ class DouyinBrowserController:
     async def create_browser_session() -> Tuple[Any, Browser, BrowserContext, Page]:
         """Khởi động browser context với các cờ stealth và chặn video streams làm nghẽn mạng."""
         p = await async_playwright().start()
-        browser: Browser = await p.chromium.launch(
-            channel="chrome", headless=settings.PLAYWRIGHT_HEADLESS,
-            args=["--no-sandbox", "--disable-blink-features=AutomationControlled", "--disable-infobars", "--window-size=1280,720", "--disable-gpu"]
-        )
+        launch_args = [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-blink-features=AutomationControlled",
+            "--disable-infobars",
+            "--window-size=1280,720",
+            "--disable-gpu",
+        ]
+        try:
+            browser: Browser = await p.chromium.launch(
+                channel="chrome", headless=settings.PLAYWRIGHT_HEADLESS, args=launch_args
+            )
+        except Exception:
+            browser = await p.chromium.launch(
+                headless=settings.PLAYWRIGHT_HEADLESS, args=launch_args
+            )
         context: BrowserContext = await browser.new_context(
             viewport={"width": 1280, "height": 720}, locale="zh-CN",
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
