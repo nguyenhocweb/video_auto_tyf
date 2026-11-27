@@ -1,8 +1,7 @@
-import os
 from pathlib import Path
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, Form, status
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from src.core.config import settings
 from src.modules.shared.auth.dependencies import get_current_user
 from src.modules.creator.bgm.schemas import BgmListResponse, BgmTrackResponse, CopyrightCheckResponse
@@ -40,7 +39,7 @@ async def upload_bgm_track(
     current_user: dict = Depends(get_current_user),
     service: BgmService = Depends(get_bgm_service),
 ):
-    """Tải lên bản nhạc nền người dùng tự thêm (Hỗ trợ cắt đoạn và khử bản quyền DSP)."""
+    """Tải lên bản nhạc nền người dùng tự thêm (Hỗ trợ cắt đoạn, khử bản quyền DSP và lưu Cloudinary)."""
     user_id = str(current_user.get("id") or current_user.get("_id", ""))
     return await service.upload_bgm(
         file=file,
@@ -93,13 +92,22 @@ async def get_random_bgm(
 
 
 @bgm_router.get("/stream/{filename}")
-async def stream_local_bgm(filename: str):
-    """Phát trực tuyến bài nhạc local đã lưu trên máy chủ."""
-    target_path = settings.BGM_STORAGE_DIR / Path(filename).name
-    if not target_path.exists():
-        raise HTTPException(status_code=404, detail="Không tìm thấy file nhạc này trên máy chủ.")
-    media_type = "audio/mpeg" if target_path.suffix == ".mp3" else "audio/wav"
-    return FileResponse(path=str(target_path), media_type=media_type)
+async def stream_local_bgm(
+    filename: str,
+    service: BgmService = Depends(get_bgm_service),
+):
+    """Phát trực tuyến bài nhạc local hoặc tự động chuyển hướng sang Cloudinary CDN nếu đã đồng bộ."""
+    safe_name = Path(filename).name
+    target_path = settings.BGM_STORAGE_DIR / safe_name
+    if target_path.exists():
+        media_type = "audio/mpeg" if target_path.suffix == ".mp3" else "audio/wav"
+        return FileResponse(path=str(target_path), media_type=media_type)
+
+    track = await service.get_track_by_filename(safe_name)
+    if track and str(track.get("audio_url", "")).startswith(("http://", "https://")):
+        return RedirectResponse(url=str(track["audio_url"]), status_code=302)
+
+    raise HTTPException(status_code=404, detail="Không tìm thấy file nhạc này trên máy chủ hoặc Cloudinary.")
 
 
 @bgm_router.delete("/{track_id}")

@@ -10,6 +10,7 @@ class BgmTrackResponse(BaseModel):
     mood: str = Field(default="chill", description="chill, upbeat, funny, asmr, cinematic, general")
     duration: float = Field(default=0.0, description="Thời lượng bản nhạc tính theo giây")
     audio_url: str
+    cloudinary_public_id: Optional[str] = None
     file_path: Optional[str] = None
     is_preset: bool = False
     sanitized: bool = Field(default=False, description="Đã được làm sạch sóng âm chống bản quyền hay chưa")

@@ -63,24 +63,20 @@ class StitchService:
 
         bgm_path = None
         if req.audio_mode == "bgm_override":
-            chosen_bgm_id = None
-            if req.bgm_ids and len(req.bgm_ids) > 0:
-                import random
-                chosen_bgm_id = random.choice(req.bgm_ids)
-                logger.info(f"Đã random chọn bài BGM '{chosen_bgm_id}' từ danh sách {len(req.bgm_ids)} bài")
-            elif req.bgm_id:
-                chosen_bgm_id = req.bgm_id
-
-            if chosen_bgm_id:
-                track = await self.bgm_service.get_bgm_by_id(chosen_bgm_id)
-                if track:
-                    file_path = track.get("file_path")
-                    if file_path and isinstance(file_path, str) and os.path.exists(file_path):
-                        bgm_path = file_path
-                    elif file_path:
-                        cand = settings.BGM_STORAGE_DIR / Path(file_path).name
-                        if cand.exists():
-                            bgm_path = str(cand)
+            candidate_ids = [str(i) for i in req.bgm_ids] if req.bgm_ids else None
+            body_dur = VideoStitcher.get_media_duration(raw_body_path)
+            est_total_dur = max(1.0, req.hook_duration + max(0.0, body_dur - req.body_skip_start))
+            chosen_track, resolved_bgm = await self.bgm_service.pick_and_resolve_random_bgm(
+                user_id=user_id,
+                preferred_id=req.bgm_id,
+                candidate_ids=candidate_ids,
+                min_duration=est_total_dur,
+            )
+            if chosen_track and resolved_bgm:
+                bgm_path = resolved_bgm
+                logger.info(f"Đã chọn & sẵn sàng BGM '{chosen_track.get('title')}' cho video ghép: {bgm_path}")
+            else:
+                logger.warning("Chế độ bgm_override nhưng không tìm thấy file BGM khả dụng!")
 
         try:
             # 1. Cắt đoạn Hook chuẩn hóa theo aspect_ratio (9:16 hoặc 16:9)
@@ -141,12 +137,13 @@ class StitchService:
                 message=f"Ghép nối video 2 nguồn thành công (chuyển cảnh chậm {req.transition_duration}s)!",
             )
         finally:
-            # Dọn dẹp clip hook tạm sau khi đã ghép
-            if os.path.exists(clipped_hook_path):
-                try:
-                    os.remove(clipped_hook_path)
-                except Exception:
-                    pass
+            # Dọn dẹp clip hook tạm & video tải tạm trong temp_dir để tiết kiệm ổ cứng VPS
+            for tmp_p in (clipped_hook_path, raw_hook_path, raw_body_path):
+                if tmp_p and str(temp_dir) in str(tmp_p) and os.path.exists(tmp_p):
+                    try:
+                        os.remove(tmp_p)
+                    except Exception:
+                        pass
 
     async def get_hooks(self, campaign_id: Optional[str] = None) -> HookListResponse:
         """Lấy danh sách các đoạn Hook trong kho đệm."""

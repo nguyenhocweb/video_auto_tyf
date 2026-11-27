@@ -49,24 +49,20 @@ class ReupTransformer:
                 orig_audio_vol = 1.0
             else:
                 bgm_service = BgmService()
-                chosen_track = await bgm_service.get_random_bgm_for_auto(
+                chosen_track, resolved_bgm = await bgm_service.pick_and_resolve_random_bgm(
                     user_id=user_id,
                     candidate_ids=selected_ids if len(selected_ids) > 0 else None,
                     min_duration=video_dur,
                 )
 
-                if chosen_track:
-                    f_path = chosen_track.get("file_path")
-                    if f_path and os.path.exists(f_path):
-                        bgm_file_path = f_path
-                        logger.info(
-                            f"Đã chọn BGM '{chosen_track.get('title')}' "
-                            f"(thời lượng {chosen_track.get('duration')}s vs video {video_dur:.1f}s) cho video {item_id}"
-                        )
-                    else:
-                        logger.warning(f"File nhạc BGM '{chosen_track.get('title')}' không tồn tại: {f_path}")
+                if chosen_track and resolved_bgm:
+                    bgm_file_path = resolved_bgm
+                    logger.info(
+                        f"Đã chọn BGM '{chosen_track.get('title')}' "
+                        f"(thời lượng {chosen_track.get('duration')}s vs video {video_dur:.1f}s) cho video {item_id}"
+                    )
                 else:
-                    logger.info(f"Không có bài BGM nào khả dụng, render biến đổi video lách pHash không kèm BGM mới.")
+                    logger.warning(f"Không có bài BGM khả dụng cho video {item_id}, render biến đổi visual không kèm BGM mới.")
 
             final_path = DubbingVideoMixer.transform_reup_video(
                 video_path=local_video_path,

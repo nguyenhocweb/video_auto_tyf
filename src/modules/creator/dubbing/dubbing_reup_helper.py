@@ -55,31 +55,13 @@ class DubbingReupHelper:
         )
         await notify_user(user_id, "DUBBING_PROGRESS", {"job_id": job_id, "step": "Đang biến đổi lách thuật toán & mix BGM...", "percent": 50})
 
-        # 1. Chọn BGM ngẫu nhiên từ kho nhạc theo Mood hoặc ID chỉ định
+        # 1. Chọn BGM ngẫu nhiên từ kho nhạc theo Mood hoặc ID chỉ định (tự tải từ Cloudinary về cache)
         bgm_service = BgmService()
         req_mood = payload_data.get("bgm_mood")
         preferred_bgm_id = payload_data.get("bgm_id")
-        bgm_track = await bgm_service.get_random_bgm_for_auto(
+        _, bgm_local_path = await bgm_service.pick_and_resolve_random_bgm(
             user_id=user_id, mood=req_mood, preferred_id=preferred_bgm_id
         )
-
-        bgm_local_path: Optional[str] = None
-        if bgm_track:
-            f_path = bgm_track.get("file_path")
-            a_url = bgm_track.get("audio_url", "")
-            if f_path and os.path.exists(f_path):
-                bgm_local_path = f_path
-            elif a_url.startswith("http"):
-                # Tải file nhạc preset về thư mục tạm
-                dl_bgm = str(temp_dir / f"bgm_{job_id}.mp3")
-                try:
-                    req = urllib.request.Request(a_url, headers={"User-Agent": "Mozilla/5.0"})
-                    with urllib.request.urlopen(req, timeout=30) as resp, open(dl_bgm, "wb") as f_out:
-                        shutil.copyfileobj(resp, f_out)
-                    if os.path.exists(dl_bgm) and os.path.getsize(dl_bgm) > 1000:
-                        bgm_local_path = dl_bgm
-                except Exception as b_err:
-                    logger.warning(f"Không thể tải BGM preset ({b_err}), tiếp tục biến đổi visual: {b_err}")
 
         # 2. Thực thi biến đổi video bằng FFmpeg (Zoom 1.04x, Crop, Color shift, BGM mix, Strip metadata)
         transformed_output = str(settings.DUBBING_OUTPUT_DIR / f"final_{job_id}.mp4")

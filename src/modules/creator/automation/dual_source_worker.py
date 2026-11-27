@@ -191,7 +191,7 @@ class DualSourceWorker:
         out_dir.mkdir(parents=True, exist_ok=True)
         stitched_out = str(out_dir / f"stitched_{campaign_id}_{body_item_id}_{uuid.uuid4().hex[:6]}.mp4")
 
-        # Nếu chọn chế độ đè BGM mà chưa có file BGM cụ thể -> Random bài hát từ danh sách đã chọn
+        # Nếu chọn chế độ đè BGM mà chưa có file BGM cụ thể -> Random bài hát từ danh sách đã chọn (tự tải từ Cloudinary)
         if audio_mode == "bgm_override" and not bgm_file_path:
             try:
                 from src.modules.creator.bgm.service import BgmService
@@ -199,16 +199,16 @@ class DualSourceWorker:
                 raw_bgm_ids = campaign.get("selected_bgm_ids")
                 selected_ids = [str(i) for i in raw_bgm_ids] if isinstance(raw_bgm_ids, list) else []
                 body_dur = VideoStitcher.get_media_duration(str(body_video_path))
-                chosen = await bgm_service.get_random_bgm_for_auto(
+                chosen, resolved_fp = await bgm_service.pick_and_resolve_random_bgm(
                     user_id=user_id,
                     candidate_ids=selected_ids if len(selected_ids) > 0 else None,
                     min_duration=body_dur,
                 )
-                if chosen:
-                    chosen_fp = chosen.get("file_path")
-                    if chosen_fp and os.path.exists(str(chosen_fp)):
-                        bgm_file_path = str(chosen_fp)
-                        logger.info(f"Đã chọn ngẫu nhiên bài BGM '{chosen.get('title')}' cho video ghép!")
+                if chosen and resolved_fp:
+                    bgm_file_path = resolved_fp
+                    logger.info(f"Đã chọn ngẫu nhiên bài BGM '{chosen.get('title')}' cho video ghép!")
+                else:
+                    logger.warning("Không tìm thấy bài BGM khả dụng cho video ghép Dual Source!")
             except Exception as ex:
                 logger.warning(f"Không thể random bài BGM cho video ghép: {ex}")
 
